@@ -16,6 +16,9 @@ export default {
         'deep-purple': '#22223B',
         'purple': '#4A4E69',
         'light-purple': '#9A8C98',
+      },
+      fontFamily: {
+        'jost': ["Jost", 'sans-serif']
       }
     },
   },
