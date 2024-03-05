@@ -12,7 +12,7 @@ export default {
     extend: {
       colors: {
         'pink': '#C9ADA7',
-        'light-pint': '#F2E9E4',
+        'light-pink': '#F2E9E4',
         'deep-purple': '#22223B',
         'purple': '#4A4E69',
         'light-purple': '#9A8C98',
