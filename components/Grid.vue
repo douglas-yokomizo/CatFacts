@@ -6,13 +6,17 @@
       <h3 class="uppercase text-2xl md:text-3xl text-deep-purple font-semibold">
         Cat Fact:
       </h3>
-      <p class="text-center text-xl md:text-justify md:text-2xl text-purple">
+      <p
+        class="text-center text-xl md:text-justify md:text-2xl text-purple"
+        v-if="data && data.length"
+      >
         {{ data[0] }}
       </p>
       <button
         @click="refreshData()"
-        class="uppercase bg-purple text-light-pink p-3 rounded-lg drop-shadow-[0_4px_5px_rgba(0,0,0,.75)]"
+        class="flex items-center gap-4 uppercase text-md md:text-xl bg-purple font-bold text-light-pink p-3 rounded-lg drop-shadow-[5px_5px_5px_rgba(0,0,0,.75)]"
       >
+        <Icon name="fa6-solid:arrow-rotate-right" />
         get a random cat fact
       </button>
     </div>
@@ -48,9 +52,53 @@
 </template>
 
 <script setup lang="ts">
-const { data } = await useAsyncData("fact", async () => {
-  const response = await $fetch("https://meowfacts.herokuapp.com/");
-  const data = response.data;
-  return data;
+interface CatFact {
+  fact: string;
+  length: number;
+}
+
+interface CatFactResponse {
+  data: CatFact[] | null;
+}
+
+const data = ref<CatFact[] | null>(null);
+
+await useAsyncData("catFact", async () => {
+  try {
+    const response: CatFactResponse = await $fetch(
+      "https://meowfacts.herokuapp.com/?count=5",
+    );
+    const dataResponse = response.data;
+
+    if (dataResponse !== null) {
+      // Armazena a data no cache do navegador
+      localStorage.setItem("catFact", JSON.stringify(dataResponse));
+    } else {
+      console.log("A resposta é null");
+    }
+  } catch (error) {
+    console.error("Erro ao buscar os dados: ", error);
+  }
 });
+
+// Atualiza a data do cache
+async function refreshData() {
+  try {
+    const response: CatFactResponse = await $fetch(
+      "https://meowfacts.herokuapp.com/",
+    );
+    const dataResponse = response.data;
+
+    if (dataResponse !== null) {
+      data.value = dataResponse;
+
+      // Atualiza o cache do navegador
+      localStorage.setItem("catFact", JSON.stringify(dataResponse));
+    } else {
+      console.log("A resposta é null");
+    }
+  } catch (error) {
+    console.error("Erro ao atualizar os dados: ", error);
+  }
+}
 </script>
