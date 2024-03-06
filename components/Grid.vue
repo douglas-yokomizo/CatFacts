@@ -7,6 +7,7 @@
         Cat Fact:
       </h3>
       <p
+        v-motion-fade
         class="text-center text-xl md:text-justify md:text-2xl text-purple"
         v-if="catFactStore.data && catFactStore.data.length"
       >
@@ -23,6 +24,7 @@
 
     <div
       class="flex w-full gap-y-4 mt-8 md:grid md:grid-cols-4 md:grid-rows-2 md:gap-x-8"
+      v-motion-slide-right
     >
       <div
         class="col-span-1 w-1/2 md:w-full md:grid md:col-span-3 md:row-span-2"
