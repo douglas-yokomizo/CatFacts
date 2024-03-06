@@ -8,9 +8,9 @@
       </h3>
       <p
         class="text-center text-xl md:text-justify md:text-2xl text-purple"
-        v-if="data && data.length"
+        v-if="catFactStore.data && catFactStore.data.length"
       >
-        {{ data[0] }}
+        {{ catFactStore.data[0] }}
       </p>
       <button
         @click="refreshData()"
@@ -52,53 +52,13 @@
 </template>
 
 <script setup lang="ts">
-interface CatFact {
-  fact: string;
-  length: number;
-}
+const catFactStore = useCatFactStore();
 
-interface CatFactResponse {
-  data: CatFact[] | null;
-}
-
-const data = ref<CatFact[] | null>(null);
-
-await useAsyncData("catFact", async () => {
-  try {
-    const response: CatFactResponse = await $fetch(
-      "https://meowfacts.herokuapp.com/?count=5",
-    );
-    const dataResponse = response.data;
-
-    if (dataResponse !== null) {
-      // Armazena a data no cache do navegador
-      localStorage.setItem("catFact", JSON.stringify(dataResponse));
-    } else {
-      console.log("A resposta é null");
-    }
-  } catch (error) {
-    console.error("Erro ao buscar os dados: ", error);
-  }
+onMounted(async () => {
+  await catFactStore.fetchCatFacts();
 });
 
-// Atualiza a data do cache
-async function refreshData() {
-  try {
-    const response: CatFactResponse = await $fetch(
-      "https://meowfacts.herokuapp.com/",
-    );
-    const dataResponse = response.data;
-
-    if (dataResponse !== null) {
-      data.value = dataResponse;
-
-      // Atualiza o cache do navegador
-      localStorage.setItem("catFact", JSON.stringify(dataResponse));
-    } else {
-      console.log("A resposta é null");
-    }
-  } catch (error) {
-    console.error("Erro ao atualizar os dados: ", error);
-  }
-}
+const refreshData = async () => {
+  await catFactStore.refreshData();
+};
 </script>
