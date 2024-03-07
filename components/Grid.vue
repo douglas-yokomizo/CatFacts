@@ -6,13 +6,14 @@
       <h3 class="uppercase text-2xl md:text-3xl text-deep-purple font-semibold">
         Cat Fact:
       </h3>
-      <p
-        v-motion-fade
-        class="text-center text-xl md:text-justify md:text-2xl text-purple"
-        v-if="catFactStore.data && catFactStore.data.length"
-      >
-        {{ catFactStore.data[0] }}
-      </p>
+      <Transition name="fade">
+        <p
+          class="text-center text-xl md:text-justify md:text-2xl text-purple"
+          v-if="showCatFact && catFactStore.data && catFactStore.data.length"
+        >
+          {{ catFactStore.data[0] }}
+        </p>
+      </Transition>
       <button
         @click="refreshData()"
         class="flex items-center gap-4 uppercase text-md md:text-xl bg-purple font-bold text-light-pink p-3 rounded-lg drop-shadow-[5px_5px_5px_rgba(0,0,0,.75)]"
@@ -60,7 +61,24 @@ onMounted(async () => {
   await catFactStore.fetchCatFacts();
 });
 
+const showCatFact = ref(true);
+
 const refreshData = async () => {
+  showCatFact.value = false;
+  await new Promise((resolve) => setTimeout(resolve, 200));
   await catFactStore.refreshData();
+  showCatFact.value = true;
 };
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
