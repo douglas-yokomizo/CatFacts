@@ -2,6 +2,7 @@
   <div class="bg-deep-purple">
     <div class="container">
       <h1
+        v-motion-slide-top
         class="uppercase text-3xl md:text-6xl font-semibold text-light-pink py-14 text-center"
       >
         The defsafe cat facts page
